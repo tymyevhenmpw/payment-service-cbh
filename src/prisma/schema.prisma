@@ -1,0 +1,46 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Payment {
+  id             String    @id @default(uuid())
+  userId         String    // ID of the user making the payment
+  websiteId      String    // ID of the website the payment is linked to
+
+  type           PaymentType
+  amount         Int       // amount in smallest currency unit (e.g., cents)
+  currency       String    @default("usd")  // ISO currency code
+
+  stripePaymentIntentId String? // Stripe payment intent (for one-time payments)
+  stripeSubscriptionId  String? // Stripe subscription id (for recurring)
+
+  status         PaymentStatus @default(PENDING)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // optional metadata fields
+  description    String?
+
+  @@index([userId])
+  @@index([websiteId])
+  @@index([type])
+  @@index([status])
+}
+
+enum PaymentType {
+  SUBSCRIPTION
+  TOKEN_PURCHASE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELED
+}

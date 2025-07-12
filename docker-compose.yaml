@@ -1,0 +1,12 @@
+
+services:
+  payment-service:
+    build: .
+    ports:
+      - "4002:4002"
+    env_file: .env
+    networks:
+      - payment-net
+
+networks:
+  payment-net:
