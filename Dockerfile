@@ -1,8 +1,5 @@
-# Base image
-FROM node:20-alpine
-
-# Install OpenSSL 1.1 for Prisma
-RUN apk add --no-cache openssl1.1
+# Use Debian-based Node.js image for full OpenSSL support
+FROM node:20-bullseye
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -22,4 +19,4 @@ RUN npm run build
 
 # Expose port and start app
 EXPOSE 4002
-CMD [ "npm", "start" ]
+CMD ["npm", "start"]
